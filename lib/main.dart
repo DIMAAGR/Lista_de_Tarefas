@@ -30,7 +30,9 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   /// LISTA DE TAREFAS
-  List _toDoList = ["Italo", "Gabriel", "João", "Isabel", "Duda"];
+  List _toDoList = [];
+  String _myTextTitle = "";
+  final _toDoController = TextEditingController();
 
 //TUDO QUE ENVOVE ARQUIVOS NÃO OCORRE IMEDIATAMENTE POR ISSO TEM QUE SER ASYNC
   /// ELE RECEBE O CAMINHO E CASO NÃO EXISTA CRIA O ARQUIVO data.json
@@ -57,6 +59,15 @@ class _HomeState extends State<Home> {
     } catch (e) {
       return "error"; //CASO HAJA ERRO RETORNA ERROR
     }
+  }
+
+  void _addToDo() {
+    Map<String, dynamic> newToDo = Map();
+    newToDo["title"] = _toDoController.text;
+    _toDoController.text = "";
+    newToDo["ok"] = false;
+    _toDoList.add(newToDo);
+    setState(() {});
   }
 
   @override
@@ -90,6 +101,8 @@ class _HomeState extends State<Home> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
+                          controller: _toDoController,
+                          onSubmitted: (text) => _addToDo(),
                           decoration: InputDecoration(
                             labelText: "Nova Tarefa",
                           ),
@@ -100,7 +113,7 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.only(
                           top: 9, bottom: 9, left: 8, right: 16),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () => _addToDo(),
                         icon: Icon(Icons.add),
                       ),
                     ),
@@ -120,10 +133,13 @@ class _HomeState extends State<Home> {
                 itemCount: _toDoList.length,
                 itemBuilder: (context, index) => CheckboxListTile(
                   value: _toDoList[index]["ok"],
-                  onChanged: (value) {},
+                  onChanged: (value) {
+                    _toDoList[index]["ok"] = !_toDoList[index]["ok"];
+                    setState(() {});
+                  },
                   secondary:
                       Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
-                  title: Text(_toDoList[index]),
+                  title: Text(_toDoList[index]["title"]),
                 ),
               ),
             ),
