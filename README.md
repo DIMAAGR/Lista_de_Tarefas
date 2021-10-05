@@ -1,16 +1,3 @@
-# listadetarefas
+# Lista de Tarefas
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Uma lista de tarefas simples, para você adicionar suas tarefas e formar sua lista para ver todas as suas tarefas, marcando se ela está concluida ou nn, também conseguindo organizar a lista recarregando a pasta e organizando altomáticamente, quando você arrasta o item para o lado você remove os item, caso tenha sido feita essa remoção por engano aparecerá uma mensagem para você desfazer a alteração.
