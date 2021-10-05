@@ -34,6 +34,11 @@ class _HomeState extends State<Home> {
   String _myTextTitle = "";
   final _toDoController = TextEditingController();
 
+  //PARA CONSEGUIR GUARDAR AS INFORMAÇÕES SOBRE OS ULTIMOS REMOVIDOS
+  //UTILIZADO O MAP PARA CASO HAJA VARIAS REMOÇÕES DE UMA SÓ VEZ!
+  Map<String, dynamic> _lastRemoved = Map();
+  Map<String, int> _lastRemovedPos = Map();
+
 //TUDO QUE ENVOVE ARQUIVOS NÃO OCORRE IMEDIATAMENTE POR ISSO TEM QUE SER ASYNC
   /// ELE RECEBE O CAMINHO E CASO NÃO EXISTA CRIA O ARQUIVO data.json
   Future<File> _getFile() async {
@@ -71,12 +76,51 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
+  _buildTile(context, index, mkey) => Dismissible(
+        direction: DismissDirection.startToEnd,
+        onDismissed: (direction) {
+          // ADICIONA OS ITENS PARA O LAST REMOVE
+          _lastRemoved.addAll(_toDoList[index]);
+
+          // APAGA O ITEM
+          _toDoList.removeAt(index);
+          _saveData(_toDoList);
+
+          // MOSTRA UMA SNACKBAR
+        },
+        background: Container(
+          color: Colors.redAccent,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        key: Key(_toDoList[index]["title"]),
+        child: CheckboxListTile(
+          value: _toDoList[index]["ok"],
+          onChanged: (value) {
+            _toDoList[index]["ok"] = !_toDoList[index]["ok"];
+            _saveData(_toDoList);
+            setState(() {});
+          },
+          secondary: Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
+          title: Text(_toDoList[index]["title"]),
+        ),
+      );
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _readData().then((value) => _toDoList = jsonDecode(value));
-    setState(() {});
+    setState(() {
+      _readData().then((value) => _toDoList = jsonDecode(value));
+    });
   }
 
   @override
@@ -140,17 +184,8 @@ class _HomeState extends State<Home> {
               elevation: 0,
               child: ListView.builder(
                 itemCount: _toDoList.length,
-                itemBuilder: (context, index) => CheckboxListTile(
-                  value: _toDoList[index]["ok"],
-                  onChanged: (value) {
-                    _toDoList[index]["ok"] = !_toDoList[index]["ok"];
-                    _saveData(_toDoList);
-                    setState(() {});
-                  },
-                  secondary:
-                      Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
-                  title: Text(_toDoList[index]["title"]),
-                ),
+                itemBuilder: (context, index) =>
+                    _buildTile(context, index, widget.key),
               ),
             ),
           )),
