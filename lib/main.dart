@@ -61,6 +61,53 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      backgroundColor: Color.fromARGB(255, 248, 248, 248),
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 248, 248, 248),
+        elevation: 0,
+        title: Text(
+          "Listas de Tarefas",
+          style: TextStyle(
+              color: Colors.black, fontWeight: FontWeight.w900, fontSize: 32),
+        ),
+      ),
+      body: Column(
+        children: [
+          Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14)),
+                elevation: 0,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            labelText: "Nova Tarefa",
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 9, bottom: 9, left: 8, right: 16),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
