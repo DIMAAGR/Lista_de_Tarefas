@@ -30,7 +30,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   /// LISTA DE TAREFAS
-  List _toDoList = [];
+  List _toDoList = ["Italo", "Gabriel", "João", "Isabel", "Duda"];
 
 //TUDO QUE ENVOVE ARQUIVOS NÃO OCORRE IMEDIATAMENTE POR ISSO TEM QUE SER ASYNC
   /// ELE RECEBE O CAMINHO E CASO NÃO EXISTA CRIA O ARQUIVO data.json
@@ -62,14 +62,17 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 248, 248, 248),
+      backgroundColor: Color.fromARGB(255, 245, 245, 245),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 248, 248, 248),
+        backgroundColor: Color.fromARGB(255, 245, 245, 245),
         elevation: 0,
-        title: Text(
-          "Listas de Tarefas",
-          style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.w900, fontSize: 32),
+        title: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Text(
+            "Listas de Tarefas",
+            style: TextStyle(
+                color: Colors.black, fontWeight: FontWeight.w900, fontSize: 32),
+          ),
         ),
       ),
       body: Column(
@@ -106,6 +109,25 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
+              elevation: 0,
+              child: ListView.builder(
+                itemCount: _toDoList.length,
+                itemBuilder: (context, index) => CheckboxListTile(
+                  value: _toDoList[index]["ok"],
+                  onChanged: (value) {},
+                  secondary:
+                      Icon(_toDoList[index]["ok"] ? Icons.check : Icons.error),
+                  title: Text(_toDoList[index]),
+                ),
+              ),
+            ),
+          )),
         ],
       ),
     );
