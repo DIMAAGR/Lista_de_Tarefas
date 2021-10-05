@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
   //PARA CONSEGUIR GUARDAR AS INFORMAÇÕES SOBRE OS ULTIMOS REMOVIDOS
   //UTILIZADO O MAP PARA CASO HAJA VARIAS REMOÇÕES DE UMA SÓ VEZ!
   Map<String, dynamic> _lastRemoved = Map();
-  Map<String, int> _lastRemovedPos = Map();
+  int _lastRemovedPos = 0;
 
 //TUDO QUE ENVOVE ARQUIVOS NÃO OCORRE IMEDIATAMENTE POR ISSO TEM QUE SER ASYNC
   /// ELE RECEBE O CAMINHO E CASO NÃO EXISTA CRIA O ARQUIVO data.json
@@ -80,13 +80,26 @@ class _HomeState extends State<Home> {
         direction: DismissDirection.startToEnd,
         onDismissed: (direction) {
           // ADICIONA OS ITENS PARA O LAST REMOVE
-          _lastRemoved.addAll(_toDoList[index]);
-
+          _lastRemoved = Map.from(_toDoList[index]);
+          _lastRemovedPos = index;
           // APAGA O ITEM
           _toDoList.removeAt(index);
           _saveData(_toDoList);
 
           // MOSTRA UMA SNACKBAR
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Row(
+            children: [
+              Expanded(child: Text("Deseja desfazer a ação?")),
+              TextButton(
+                  onPressed: () {
+                    _toDoList.insert(_lastRemovedPos, _lastRemoved);
+                    _saveData(_toDoList);
+                    setState(() {});
+                  },
+                  child: Text("Desfazer"))
+            ],
+          )));
         },
         background: Container(
           color: Colors.redAccent,
@@ -101,7 +114,7 @@ class _HomeState extends State<Home> {
             ),
           ),
         ),
-        key: Key(_toDoList[index]["title"]),
+        key: UniqueKey(),
         child: CheckboxListTile(
           value: _toDoList[index]["ok"],
           onChanged: (value) {
@@ -125,6 +138,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    print(_lastRemovedPos);
+    // _toDoList = [];
+    // _saveData(_toDoList);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 245, 245, 245),
       appBar: AppBar(
