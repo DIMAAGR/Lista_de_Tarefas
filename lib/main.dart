@@ -136,6 +136,15 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(seconds: 1));
+    _toDoList.sort((a,b) {
+      if(a["ok"] && !b["ok"]) return 1;
+      if(!a["ok"] && b["ok"]) return 1;
+      else return 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print(_lastRemovedPos);
@@ -198,11 +207,11 @@ class _HomeState extends State<Home> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14)),
               elevation: 0,
-              child: ListView.builder(
+              child: RefreshIndicator(child: ListView.builder(
                 itemCount: _toDoList.length,
                 itemBuilder: (context, index) =>
                     _buildTile(context, index, widget.key),
-              ),
+              ), onRefresh: _refresh)
             ),
           )),
         ],
